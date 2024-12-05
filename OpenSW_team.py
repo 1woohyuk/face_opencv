@@ -22,3 +22,19 @@ if __name__ == "__main__":
                       '(25 ~ 32)', '(38 ~ 43)', '(48 ~ 53)', '(60 ~ 100)']
     gender_categories = ['Male', 'Female']
 
+
+def load_models():
+    age_net = cv2.dnn.readNetFromCaffe('deploy_age.prototxt', 'age_net.caffemodel')
+    gender_net = cv2.dnn.readNetFromCaffe('deploy_gender.prototxt', 'gender_net.caffemodel')
+    return age_net, gender_net
+
+def predict_age_gender(blob, age_net, gender_net, age_list, gender_list):
+    gender_net.setInput(blob)
+    gender_preds = gender_net.forward()
+    gender = gender_list[gender_preds.argmax()]  # 성별 예측
+
+    age_net.setInput(blob)
+    age_preds = age_net.forward()
+    age = age_list[age_preds.argmax()]  # 나이 예측
+
+    return f"{gender} {age}"
