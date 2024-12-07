@@ -38,3 +38,22 @@ def predict_age_gender(blob, age_net, gender_net, age_list, gender_list):
     age = age_list[age_preds.argmax()]  # 나이 예측
 
     return f"{gender} {age}"
+
+def video_detector(cam, cascade, age_net, gender_net, mean_values, age_list, gender_list):
+    while True:
+        ret, frame = cam.read()
+        if not ret:
+            break
+
+        faces = detect_faces(frame, cascade)  # 얼굴 탐지
+        for box in faces:
+            blob = preprocess_face(frame, box, mean_values)  # 얼굴 전처리
+            info = predict_age_gender(blob, age_net, gender_net, age_list, gender_list)  # 성별/나이 예측
+
+            x, y, w, h = box
+            cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 255, 255), thickness=2)
+            cv2.putText(frame, info, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), thickness=1)
+
+        cv2.imshow('Video Face Detector', frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):  # 'q' 키를 누르면 종료
+            break
