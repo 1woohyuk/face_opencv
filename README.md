@@ -21,4 +21,4 @@
    - 사전 학습된 모델 적용 및 튜닝.
    - 결과 시각화 및 성능 평가.
 
-참고: https://deep-eye.tistory.com/46(link)
+참고: https://deep-eye.tistory.com/46
